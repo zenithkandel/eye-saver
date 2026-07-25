@@ -1,39 +1,144 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
-    <script type="module" src="/main.js" defer></script>
-  </head>
-
-  <body>
-    <main class="container">
-      <h1>Welcome to Tauri</h1>
-
-      <div class="row">
-        <a href="https://tauri.app" target="_blank">
-          <img src="/assets/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-          target="_blank"
-        >
-          <img
-            src="/assets/javascript.svg"
-            class="logo vanilla"
-            alt="JavaScript logo"
-          />
-        </a>
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eye Saver</title>
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/settings.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Custom Drag Titlebar -->
+    <header class="titlebar drag-region">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 64 64" fill="none">
+          <path d="M6 32C6 32 15.6 14 32 14C48.4 14 58 32 58 32C58 32 48.4 50 32 50C15.6 50 6 32 6 32Z" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="10" stroke="currentColor" stroke-width="5"/>
+          <circle cx="35" cy="29" r="3" fill="currentColor"/>
+        </svg>
+        <span>Eye Saver</span>
       </div>
-      <p>Click on the Tauri logo to learn more about the framework</p>
 
-      <form class="row" id="greet-form">
-        <input id="greet-input" placeholder="Enter a name..." />
-        <button type="submit">Greet</button>
-      </form>
-      <p id="greet-msg"></p>
+      <div class="window-controls no-drag">
+        <!-- Theme Toggle Button -->
+        <button id="theme-btn" class="icon-btn" title="Toggle Theme">
+          <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Minimize Button -->
+        <button id="minimize-btn" class="icon-btn" title="Minimize">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+
+        <!-- Close Button (Minimizes to Tray) -->
+        <button id="close-btn" class="icon-btn close-btn" title="Hide to Tray">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Dashboard Content -->
+    <main class="main-content">
+      <!-- Hero Circular Timer Status Card -->
+      <section class="hero-card">
+        <div class="status-badge" id="status-badge">
+          <span class="status-dot"></span>
+          <span id="status-text">Active Timer</span>
+        </div>
+
+        <div class="timer-ring-container">
+          <svg class="timer-ring-svg" viewBox="0 0 100 100">
+            <circle class="timer-ring-bg" cx="50" cy="50" r="44" fill="none"></circle>
+            <circle id="timer-ring-path" class="timer-ring-progress" cx="50" cy="50" r="44" fill="none" stroke-dasharray="276.46" stroke-dashoffset="0"></circle>
+          </svg>
+          <div class="timer-display">
+            <span id="timer-countdown" class="time-text">20:00</span>
+            <span id="timer-mode-label" class="time-label">UNTIL BREAK</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button id="break-now-btn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            Take Break Now
+          </button>
+          <button id="resume-btn" class="btn btn-secondary" style="display:none;">
+            Resume Timer
+          </button>
+        </div>
+      </section>
+
+      <!-- Quick Pause Options -->
+      <section>
+        <div class="section-title">Quick Pause Options</div>
+        <div class="snooze-group">
+          <button class="btn btn-pill pause-opt-btn" data-duration="30">30 min</button>
+          <button class="btn btn-pill pause-opt-btn" data-duration="60">1 hour</button>
+          <button class="btn btn-pill pause-opt-btn" data-duration="120">2 hours</button>
+          <button class="btn btn-pill pause-opt-btn" data-duration="tomorrow">Rest of Day</button>
+        </div>
+      </section>
+
+      <!-- Settings Configuration Card -->
+      <section class="card">
+        <!-- Work Interval -->
+        <div class="slider-container">
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-title">Work Interval</span>
+              <span class="setting-desc">Time between eye rest reminders</span>
+            </div>
+            <span id="work-val" class="setting-value">20 min</span>
+          </div>
+          <input type="range" id="work-slider" class="custom-range" min="1" max="120" value="20">
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--border);">
+
+        <!-- Break Duration -->
+        <div class="slider-container">
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-title">Break Duration</span>
+              <span class="setting-desc">Length of full-screen rest overlay</span>
+            </div>
+            <span id="break-val" class="setting-value">20 sec</span>
+          </div>
+          <input type="range" id="break-slider" class="custom-range" min="5" max="300" step="5" value="20">
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--border);">
+
+        <!-- Startup Option -->
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-title">Launch on Startup</span>
+            <span class="setting-desc">Automatically start Eye Saver with Windows</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="autostart-toggle" checked>
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+      </section>
     </main>
-  </body>
+  </div>
+
+  <script src="js/theme.js"></script>
+  <script src="js/settings.js"></script>
+</body>
 </html>
