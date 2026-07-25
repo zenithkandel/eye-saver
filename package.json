@@ -1,12 +1,21 @@
 {
-  "name": "tauri-app",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
+  "name": "eye-saver",
+  "version": "1.0.0",
+  "description": "An ultra-lightweight, minimal Windows eye rest reminder application.",
+  "main": "main.js",
   "scripts": {
-    "tauri": "tauri"
+    "start": "electron ."
   },
+  "keywords": [
+    "eye-saver",
+    "health",
+    "timer",
+    "break-reminder",
+    "minimal"
+  ],
+  "author": "",
+  "license": "MIT",
   "devDependencies": {
-    "@tauri-apps/cli": "^2"
+    "electron": "^34.2.0"
   }
 }
